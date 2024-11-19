@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +12,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var height = MediaQuery.sizeOf(context).height;
     var width = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Puzzle'),
@@ -28,16 +28,37 @@ class _HomePageState extends State<HomePage> {
                   name.length,
                   (index) {
                     if (restart == targetImage.length) {
+                      // Reset targetImage and restart counter
                       for (int i = 0; i < targetImage.length; i++) {
-                        targetImage[index] = false;
+                        targetImage[i] = false;
                       }
+                      restart = 0;
                     }
-                    return DragTarget(
+
+                    return DragTarget<String>(
                       onAcceptWithDetails: (details) {
                         setState(() {
                           if (details.data == imagesTarget[index]) {
                             targetImage[index] = true;
+                            draggableImages.remove(details.data);
                             restart += 1;
+
+                            // Check if all targets are filled
+                            if (restart == targetImage.length) {
+                              showCompletionDialog(context);
+                            }
+                          } else {
+                            // Show snackbar on wrong match
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Wrong match! Try again.',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
                           }
                         });
                       },
@@ -45,14 +66,20 @@ class _HomePageState extends State<HomePage> {
                         return Container(
                           alignment: Alignment.center,
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 10),
+                            horizontal: 5,
+                            vertical: 10,
+                          ),
                           height: height * 0.1,
                           width: width * 0.25,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey[200],
                           ),
                           child: (targetImage[index])
-                              ? Image.network(imagesTarget[index])
+                              ? Image.network(
+                                  imagesTarget[index],
+                                  fit: BoxFit.cover,
+                                )
                               : Text(name[index]),
                         );
                       },
@@ -63,10 +90,10 @@ class _HomePageState extends State<HomePage> {
             ),
             Wrap(
               children: List.generate(
-                images.length,
+                draggableImages.length,
                 (index) {
-                  return Draggable(
-                    data: images[index],
+                  return Draggable<String>(
+                    data: draggableImages[index],
                     feedback: Container(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 5,
@@ -75,10 +102,12 @@ class _HomePageState extends State<HomePage> {
                       height: height * 0.1,
                       width: width * 0.25,
                       child: Image.network(
-                        images[index],
+                        draggableImages[index],
                         fit: BoxFit.cover,
                       ),
                     ),
+                    childWhenDragging: Container(),
+                    // Empty container when dragging
                     child: Container(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 5,
@@ -88,9 +117,10 @@ class _HomePageState extends State<HomePage> {
                       width: width * 0.25,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
                       ),
                       child: Image.network(
-                        images[index],
+                        draggableImages[index],
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -103,33 +133,40 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-Future<void> gameRestart(BuildContext context) async {
-  await Future.delayed(
-    const Duration(seconds: 1),
-    () {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Won'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(
-                  color: Colors.black,
+  void showCompletionDialog(BuildContext context) {
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Congratulations!'),
+            content: const Text('You have completed the puzzle.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // Restart the game
+                  setState(() {
+                    for (int i = 0; i < targetImage.length; i++) {
+                      targetImage[i] = false;
+                    }
+                    draggableImages = List.from(images);
+                    restart = 0;
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Restart',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 List<String> name = [
@@ -158,18 +195,6 @@ List<String> imagesTarget = [
   'https://img.tatacliq.com/images/i6/437Wx649H/MP000000007341831_437Wx649H_20200730015207.jpeg',
 ];
 
-List<String> target = [
-  'Flutter',
-  'Bicycle',
-  'Mango',
-  'Apple',
-  'Lion',
-  'Shin chan',
-  'Tiger',
-  'Dart Logo',
-  'Honey',
-];
-
 List<bool> targetImage = [
   false,
   false,
@@ -193,3 +218,5 @@ List<String> images = [
   'https://ih1.redbubble.net/image.1153489054.7327/fposter,small,wall_texture,product,750x1000.u4.jpg',
   'https://images.immediate.co.uk/production/volatile/sites/30/2024/03/Honey440-bb52330.jpg?quality=90&resize=440,400',
 ];
+
+List<String> draggableImages = List.from(images);
