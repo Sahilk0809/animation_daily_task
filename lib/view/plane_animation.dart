@@ -8,22 +8,33 @@ class PlaneAnimationPage extends StatefulWidget {
 }
 
 class _PlaneAnimationPageState extends State<PlaneAnimationPage> {
-  bool _isPlaneUp = false;
   int index = 0;
 
-  final List<Alignment> align = [
-    Alignment.bottomLeft,
-    Alignment.topCenter,
-    Alignment.bottomRight,
+  final List align = [
+    {
+      'align': Alignment.bottomLeft,
+      'color': Colors.white,
+    },
+    {
+      'align': Alignment.topCenter,
+      'color': Colors.tealAccent,
+    },
+    {
+      'align': Alignment.bottomRight,
+      'color': Colors.grey,
+    },
+    {
+      'align': Alignment.bottomLeft,
+      'color': Colors.white,
+    }
   ];
 
   void _toggleAnimation() {
     setState(() {
-      _isPlaneUp = !_isPlaneUp;
 
       // Ensure the index wraps within the range of the list
       if (index == align.length - 1) {
-        index = 0;
+        index = 1;
       } else {
         index++;
       }
@@ -38,14 +49,14 @@ class _PlaneAnimationPageState extends State<PlaneAnimationPage> {
         padding: const EdgeInsets.only(top: 20),
         duration: const Duration(seconds: 2),
         curve: Curves.easeInOut,
-        color: _isPlaneUp ? Colors.blue[100] : Colors.white,
+        color: align[index]['color'],
         child: Stack(
           children: [
             // Animated Plane Position
             AnimatedAlign(
               duration: const Duration(seconds: 2),
               curve: Curves.easeInOut,
-              alignment: _isPlaneUp ? Alignment.topCenter : align[index],
+              alignment: align[index]['align'],
               child: const Icon(
                 Icons.flight,
                 size: 48,
