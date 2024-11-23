@@ -49,3 +49,20 @@ A Flutter project demonstrating the use of Hero animations to create smooth tran
 <img src="https://github.com/user-attachments/assets/a6c4d786-224f-4c18-bab5-a307e108595c" height=65% width=22%>
 
 https://github.com/user-attachments/assets/b809a166-ae4c-43e5-b474-99a327476cc3
+
+
+## Speed of Rotation Animation 🌌
+
+## Description
+
+A Flutter-based app showcasing a dynamic rotation animation where the speed of rotation can be adjusted in real-time. This project demonstrates the use of AnimationController to create smooth and continuous animations with user-defined speed controls.
+
+## Features ✨
+- Dynamic Animation Speed Adjustment: Increase or decrease the rotation speed using the floating action buttons.
+- Seamless Animation: The rotation remains smooth and uninterrupted, even when the speed changes dynamically.
+- Customizable Duration: Animation speed is clamped to ensure a range of 1 to 60 seconds per cycle.
+- Minimalistic Design: A simple, black background with a rotating image for a clean and focused UI.
+
+<img src="https://github.com/user-attachments/assets/ca63efe9-ec82-4671-bb13-88b6f4ab1d8b" height = 65% width = 22%>
+
+https://github.com/user-attachments/assets/ad5d20cf-1e89-4514-a12a-05f9ca635a9c
