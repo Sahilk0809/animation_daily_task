@@ -59,7 +59,7 @@ class _PlaneAnimationPageState extends State<PlaneAnimationPage> {
               alignment: align[index]['align'],
               child: const Icon(
                 Icons.flight,
-                size: 48,
+                size: 100,
                 color: Colors.teal,
               ),
             ),
