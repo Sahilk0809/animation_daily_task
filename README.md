@@ -23,6 +23,7 @@ https://github.com/user-attachments/assets/54eaa0f6-0f04-4525-8b59-5880a8c5b2ac
 ## Align Animation
 
 ## Description
+
 A Flutter app showcasing smooth animations with an airplane icon that changes positions and background color dynamically based on user interaction. Users can toggle the plane's alignment and observe the transition effects using the "Toggle Plane" button.
 
 <img src="https://github.com/user-attachments/assets/d9011c69-74ab-4273-963e-57b16f16ea25" height=65% width=22%>
